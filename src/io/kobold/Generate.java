@@ -89,7 +89,17 @@ public class Generate {
 		String appFolder = concatenateFile(config.atenaMdFolder, config.appFolderName);
 		File gitIgnore = new File(concatenateFile(config.configFilesFolder, ".gitignore"));
 		Files.copy(gitIgnore.toPath(), new File(concatenateFile(appFolder, ".gitignore")).toPath(), StandardCopyOption.REPLACE_EXISTING);
-
+		
+		File glideModule = new File(concatenateFile(config.configFilesFolder, "AppCoreGlideModule.java"));
+		readAndWriteOnFile(concatenateFile(appFolder, getPackageFormatted(config)), glideModule, new OnReadLine() {
+			
+			@Override
+			public String onReadLine(String line) {
+				return line
+						.replace("$package", config.packageName);
+			}
+		});
+		
 		File appFile = new File(concatenateFile(config.configFilesFolder, "App.kt"));
 		if(!appFile.exists()) {
 			appFile = new File(concatenateFile(config.configFilesFolder, "App.java"));
